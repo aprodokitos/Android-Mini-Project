@@ -1,18 +1,19 @@
 import mysql from 'mysql2/promise';
 import express from 'express';
+import cors from 'cors';
 
 const app = express();
-app.use(express.json());
-
-let db;
+app.use(cors()); 
+app.use(express.json()); 
 
 // Fungsi untuk membuat koneksi ke database
+let db;
 async function connectDB() {
     try {
         db = await mysql.createConnection({
             host: 'localhost',
-            user: 'userkamu',
-            password: 'passwordkamu', 
+            user: 'root',
+            password: 'makan100kali', 
             database: 'gym_membership'
         });
         console.log("Connected to MySQL!");
@@ -22,7 +23,7 @@ async function connectDB() {
     }
 }
 
-// Panggil fungsi untuk koneksi ke database
+
 await connectDB();
 
 // Endpoint untuk cek koneksi server
@@ -39,11 +40,11 @@ app.post('/create-members', async (req, res) => {
             [name, email, membership_type, join_date]
         );
         res.json({
-            "message": "User created successfully",
-            "nama": name,
-            "email": email,
-            "membership type": membership_type,
-            "join_date": join_date
+            message: "User created successfully",
+            name,
+            email,
+            membership_type,
+            join_date
         });
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -56,14 +57,13 @@ app.get('/members', async (req, res) => {
         const [results] = await db.query('SELECT * FROM members');
         const formattedResults = results.map(member => ({
             ...member,
-            join_date: new Date(member.join_date).toISOString().split('T')[0] // Hanya ambil bagian tanggal
+            join_date: new Date(member.join_date).toISOString().split('T')[0] // Format tanggal
         }));
         res.json(formattedResults);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
-
 
 // Endpoint untuk mendapatkan anggota berdasarkan ID
 app.get('/members/:id', async (req, res) => {
@@ -84,13 +84,12 @@ app.get('/members/:id', async (req, res) => {
     }
 });
 
-
 // Endpoint untuk mengupdate data anggota
 app.put('/members/:id', async (req, res) => {
     const { id } = req.params;
     const { name, email, membership_type, join_date } = req.body;
     try {
-        const [result] = await db.query(
+        await db.query(
             'UPDATE members SET name = ?, email = ?, membership_type = ?, join_date = ? WHERE id = ?',
             [name, email, membership_type, join_date, id]
         );
@@ -104,7 +103,7 @@ app.put('/members/:id', async (req, res) => {
 app.delete('/members/:id', async (req, res) => {
     const { id } = req.params;
     try {
-        const [result] = await db.query('DELETE FROM members WHERE id = ?', [id]);
+        await db.query('DELETE FROM members WHERE id = ?', [id]);
         res.json({ message: 'Member berhasil dihapus' });
     } catch (err) {
         res.status(500).json({ error: err.message });

@@ -6,7 +6,7 @@ const app = express();
 app.use(cors()); 
 app.use(express.json()); 
 
-// Fungsi untuk membuat koneksi ke database
+
 let db;
 async function connectDB() {
     try {
@@ -26,12 +26,12 @@ async function connectDB() {
 
 await connectDB();
 
-// Endpoint untuk cek koneksi server
+
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-// Endpoint untuk menambahkan anggota baru
+
 app.post('/create-members', async (req, res) => {
     const { name, email, membership_type, join_date } = req.body;
     try {
@@ -51,7 +51,7 @@ app.post('/create-members', async (req, res) => {
     }
 });
 
-// Endpoint untuk mendapatkan semua anggota
+
 app.get('/members', async (req, res) => {
     try {
         const [results] = await db.query('SELECT * FROM members');
@@ -65,7 +65,7 @@ app.get('/members', async (req, res) => {
     }
 });
 
-// Endpoint untuk mendapatkan anggota berdasarkan ID
+
 app.get('/members/:id', async (req, res) => {
     const { id } = req.params;
     try {
@@ -84,7 +84,7 @@ app.get('/members/:id', async (req, res) => {
     }
 });
 
-// Endpoint untuk mengupdate data anggota
+
 app.put('/members/:id', async (req, res) => {
     const { id } = req.params;
     const { name, email, membership_type, join_date } = req.body;
@@ -99,7 +99,7 @@ app.put('/members/:id', async (req, res) => {
     }
 });
 
-// Endpoint untuk menghapus anggota
+
 app.delete('/members/:id', async (req, res) => {
     const { id } = req.params;
     try {
@@ -110,7 +110,7 @@ app.delete('/members/:id', async (req, res) => {
     }
 });
 
-// Menjalankan server
+
 app.listen(3000, () => {
     console.log('Server is running at http://localhost:3000/');
 });

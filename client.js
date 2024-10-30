@@ -10,7 +10,7 @@ async function createMember() {
     try {
         const name = prompt("Enter member name: ");
         const email = prompt("Enter member email: ");
-        const membershipType = prompt("Enter membership type (silver/gold/bronze): ");
+        const membershipType = prompt("Enter membership type (bronze/silver/gold): ");
         const joinDate = prompt("Enter join date (YYYY-MM-DD): ");
 
         const response = await axios.post(createURL, {

@@ -11,8 +11,8 @@ async function connectDB() {
     try {
         db = await mysql.createConnection({
             host: 'localhost',
-            user: 'root',
-            password: 'makan100kali', 
+            user: 'userkamu',
+            password: 'passwordkamu', 
             database: 'gym_membership'
         });
         console.log("Connected to MySQL!");
